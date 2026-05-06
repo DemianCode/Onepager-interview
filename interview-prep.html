@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f6f3; --card: #fff; --border: #e5e4e0; --border-h: #c8c7c3;
+  --navy: #111827; --accent: #2563eb; --accent-h: #1d4ed8; --accent-bg: #eff6ff;
+  --text: #1a1a1a; --t2: #555; --t3: #999;
+  --done-bg: #fafaf9; --done-c: #bbb;
+  --header-h: 58px; --nav-h: 42px; --top: 100px;
+  --gs-bg:#e4f4ed; --gs-c:#0a5a44;
+  --gl-bg:#dbeafe; --gl-c:#1d4ed8;
+  --gst-bg:#fef3c7; --gst-c:#92400e;
+  --gt-bg:#dcfce7; --gt-c:#166534;
+  --gm-bg:#ede9fe; --gm-c:#5b21b6;
+  --gmo-bg:#fee2e2; --gmo-c:#991b1b;
+  --gc-bg:#f1f5f9; --gc-c:#475569;
+}
+html { scroll-behavior: smooth; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+/* ── Sync banner ── */
+.sync-banner { position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 95; padding: 7px 1.25rem; display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500; transition: all 0.2s; }
+.sync-banner.hidden { display: none; }
+.sync-banner.warn { background: #fef3c7; color: #92400e; border-bottom: 1px solid #fde68a; }
+.sync-banner.ok   { background: #d1fae5; color: #065f46; border-bottom: 1px solid #a7f3d0; }
+.sbtn { padding: 3px 10px; border-radius: 5px; border: 1px solid currentColor; background: transparent; color: inherit; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.sdismiss { margin-left: auto; opacity: 0.5; cursor: pointer; font-size: 14px; background: none; border: none; color: inherit; padding: 0 2px; }
+.sync-banner.ok .sbtn, .sync-banner.ok .sdismiss { display: none; }
+
+/* ── Header ── */
+.hdr { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--navy); display: flex; align-items: center; padding: 0 1.25rem; gap: 10px; z-index: 100; }
+.role-wrap { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.role-label { font-size: 11px; color: rgba(255,255,255,0.4); white-space: nowrap; flex-shrink: 0; }
+.role-input { background: transparent; border: none; outline: none; color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 500; font-family: inherit; flex: 1; min-width: 0; }
+.role-input::placeholder { color: rgba(255,255,255,0.3); }
+.role-input:focus { color: #fff; }
+.tabs { display: flex; gap: 3px; background: rgba(255,255,255,0.08); border-radius: 7px; padding: 3px; flex-shrink: 0; }
+.tab-btn { padding: 5px 13px; border: none; border-radius: 5px; background: transparent; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.tab-btn.active { background: rgba(255,255,255,0.18); color: #fff; }
+.tab-btn:hover:not(.active) { color: rgba(255,255,255,0.8); }
+.hdr-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.prog-pill { font-size: 11px; color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.08); padding: 3px 9px; border-radius: 20px; min-width: 48px; text-align: center; white-space: nowrap; }
+.hdr-btn { padding: 5px 10px; border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; background: transparent; color: rgba(255,255,255,0.65); font-size: 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+.hdr-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.32); color: rgba(255,255,255,0.9); }
+.hdr-btn.focus-on { background: rgba(37,99,235,0.5); border-color: rgba(37,99,235,0.8); color: #fff; }
+.hdr-btn.export-btn { color: #93c5fd; border-color: rgba(147,197,253,0.35); }
+.hdr-btn.export-btn:hover { background: rgba(37,99,235,0.25); }
+.help-btn { font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 11px; letter-spacing: -0.02em; color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.15); padding: 5px 9px; }
+.help-btn:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.3); }
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.18); flex-shrink: 0; transition: background 0.4s; cursor: help; }
+.sync-dot.saved { background: #6ee7b7; }
+.sync-dot.saving { background: #fbbf24; }
+.sync-dot.unlinked { background: rgba(251,191,36,0.5); }
+
+/* ── Category nav ── */
+.cat-nav { position: fixed; top: var(--header-h); left: 0; right: 0; height: var(--nav-h); background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 1.25rem; gap: 4px; z-index: 90; overflow-x: auto; scrollbar-width: none; transition: top 0.2s; }
+.cat-nav::-webkit-scrollbar { display: none; }
+.cat-nav.shifted { top: calc(var(--header-h) + 34px); }
+.cat-pill { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--t2); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; text-decoration: none; transition: all 0.15s; }
+.cat-pill:hover { border-color: var(--accent); color: var(--accent); }
+.cat-pill.active { background: var(--accent-bg); border-color: transparent; color: var(--accent); }
+
+/* ── Main ── */
+.main { padding: calc(var(--top) + 1.5rem) 1.25rem 5rem; max-width: 760px; margin: 0 auto; transition: padding-top 0.2s; }
+.main.shifted { padding-top: calc(var(--top) + 34px + 1.5rem); }
+.panel { display: none; }
+.panel.active { display: block; }
+.cat-section { margin-bottom: 2.25rem; scroll-margin-top: calc(var(--top) + 16px); }
+.cat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--t3); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.add-in-cat { font-size: 11px; font-weight: 500; color: var(--accent); background: none; border: none; cursor: pointer; letter-spacing: 0; text-transform: none; padding: 2px 7px; border-radius: 4px; transition: all 0.15s; font-family: inherit; }
+.add-in-cat:hover { background: var(--accent-bg); }
+
+/* ── Card ── */
+.q-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; transition: border-color 0.15s; }
+.q-card:hover:not(.done) { border-color: var(--border-h); }
+.q-card.done { background: var(--done-bg); }
+.q-card.done .q-text { color: var(--done-c); text-decoration: line-through; }
+.q-card.done .gt-wrap { opacity: 0.35; pointer-events: none; }
+.q-card.dragging { opacity: 0.4; border: 2px dashed var(--accent); }
+.q-card.drag-over { border-color: var(--accent); border-style: dashed; }
+.q-top { display: flex; align-items: flex-start; gap: 9px; padding: 13px 13px 8px; }
+.drag-h { color: var(--t3); cursor: grab; font-size: 15px; flex-shrink: 0; line-height: 1; padding-top: 2px; opacity: 0; transition: opacity 0.15s; user-select: none; }
+.q-card:hover .drag-h { opacity: 1; }
+body.focus-mode .drag-h { display: none; }
+.q-chk { width: 18px; height: 18px; border: 1.5px solid var(--border-h); border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 2px; }
+.q-chk:hover { border-color: var(--accent); }
+.q-chk.on { background: var(--accent); border-color: var(--accent); }
+.q-chk.on::after { content: ''; display: block; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg) translateY(-1px); }
+.q-body { flex: 1; min-width: 0; }
+.q-text { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5; }
+.q-acts { display: flex; align-items: center; gap: 2px; flex-shrink: 0; margin-top: 1px; }
+.q-icn { width: 27px; height: 27px; border: none; background: none; color: var(--t3); cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 13px; opacity: 0; transition: all 0.15s; font-family: inherit; }
+.q-card:hover .q-icn { opacity: 1; }
+.q-icn:hover { background: var(--bg); color: var(--text); }
+.q-icn.del:hover { color: #dc2626; background: #fee2e2; }
+body.focus-mode .q-icn { display: none; }
+
+/* ── Guidance ── */
+.gt-wrap { padding: 0 13px 0 40px; }
+.gt-btn { display: flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 0 0 6px; font-family: inherit; }
+.gt-arrow { font-size: 9px; color: var(--t3); transition: transform 0.15s; display: inline-block; }
+.gt-btn.open .gt-arrow { transform: rotate(90deg); }
+.g-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.gt-hint { font-size: 11px; color: var(--t3); }
+.q-guidance { font-size: 13px; color: var(--t2); background: var(--bg); border-radius: 6px; padding: 9px 11px; margin-bottom: 8px; line-height: 1.55; border-left: 3px solid var(--border-h); display: none; }
+.q-guidance.vis { display: block; }
+body.focus-mode .gt-wrap { display: none; }
+
+/* ── Notes ── */
+.q-nwrap { padding: 0 13px 12px 40px; }
+body.focus-mode .q-nwrap { padding-left: 13px; }
+textarea.q-notes { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); resize: none; outline: none; min-height: 56px; overflow: hidden; transition: border-color 0.15s, min-height 0.15s; line-height: 1.55; }
+textarea.q-notes:focus { border-color: var(--accent); background: #fff; min-height: 74px; }
+textarea.q-notes::placeholder { color: var(--t3); }
+
+/* ── FAB ── */
+.fab { position: fixed; bottom: 2rem; right: 2rem; width: 46px; height: 46px; background: var(--accent); color: #fff; border: none; border-radius: 50%; font-size: 22px; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; transition: all 0.15s; font-family: inherit; }
+.fab:hover { background: var(--accent-h); transform: scale(1.06); }
+
+/* ── Modals shared ── */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.modal-bg.hidden { display: none; }
+.modal-box { background: var(--card); border-radius: 12px; padding: 1.5rem; width: 100%; max-width: 510px; max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; }
+.frow { margin-bottom: 11px; }
+.flbl { font-size: 12px; font-weight: 500; color: var(--t2); margin-bottom: 4px; display: block; }
+.flbl span { font-weight: 400; opacity: 0.6; }
+input.fi, select.fi, textarea.fi { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.15s; }
+input.fi:focus, select.fi:focus, textarea.fi:focus { border-color: var(--accent); background: #fff; }
+textarea.fi { min-height: 72px; resize: vertical; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
+.mbtn { padding: 7px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text); transition: all 0.15s; font-family: inherit; }
+.mbtn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.mbtn:hover:not(.primary) { background: var(--border); }
+.mbtn.primary:hover { background: var(--accent-h); }
+
+/* ── Help modal ── */
+.help-box { max-width: 580px; }
+.help-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.25rem; }
+.help-title { font-size: 17px; font-weight: 600; }
+.help-version { font-size: 11px; color: var(--t3); font-family: 'Menlo', monospace; }
+.help-section { margin-bottom: 1.25rem; }
+.help-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--t3); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.help-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: flex-start; }
+.help-icon { font-size: 16px; flex-shrink: 0; width: 22px; text-align: center; line-height: 1.5; }
+.help-text { font-size: 13px; color: var(--t2); line-height: 1.55; flex: 1; }
+.help-text strong { color: var(--text); font-weight: 500; }
+.kbd-table { width: 100%; border-collapse: collapse; }
+.kbd-table td { padding: 5px 0; font-size: 13px; color: var(--t2); vertical-align: top; }
+.kbd-table td:first-child { padding-right: 16px; }
+kbd { display: inline-block; padding: 2px 7px; border: 1px solid var(--border-h); border-radius: 4px; font-size: 11px; font-family: 'Menlo', monospace; background: var(--bg); color: var(--text); }
+.badge-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge-explain { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--t2); }
+.help-tip { background: var(--accent-bg); border-radius: 6px; padding: 10px 12px; font-size: 12px; color: var(--t2); line-height: 1.55; border-left: 3px solid var(--accent); margin-top: 1rem; }
+.help-tip strong { color: var(--accent); }
+.step-list { list-style: none; counter-reset: steps; }
+.step-list li { counter-increment: steps; display: flex; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--t2); line-height: 1.5; }
+.step-list li::before { content: counter(steps); width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 7px 16px; border-radius: 20px; font-size: 13px; z-index: 400; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+.toast.vis { opacity: 1; }
+
+/* ── Badge colours ── */
+.gb-short  { background: var(--gs-bg);  color: var(--gs-c); }
+.gb-listen { background: var(--gl-bg);  color: var(--gl-c); }
+.gb-star   { background: var(--gst-bg); color: var(--gst-c); }
+.gb-tech   { background: var(--gt-bg);  color: var(--gt-c); }
+.gb-medium { background: var(--gm-bg);  color: var(--gm-c); }
+.gb-motiv  { background: var(--gmo-bg); color: var(--gmo-c); }
+.gb-concise{ background: var(--gc-bg);  color: var(--gc-c); }
+
+@media print {
+  .hdr, .cat-nav, .fab, .q-icn, .drag-h, .gt-btn, .add-in-cat, .sync-banner { display: none !important; }
+  .main { padding-top: 1rem !important; }
+  .q-guidance { display: block !important; }
+  .q-card { break-inside: avoid; margin-bottom: 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="role-wrap">
+    <span class="role-label">Prep for:</span>
+    <input class="role-input" id="role-input" placeholder="Role — Company" maxlength="80" oninput="onRoleChange(this.value)">
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('ask')">Questions to Ask</button>
+    <button class="tab-btn" onclick="switchTab('prep')">Questions to Prepare</button>
+  </div>
+  <div class="hdr-right">
+    <div class="sync-dot unlinked" id="sync-dot" title="File not linked"></div>
+    <div class="prog-pill" id="prog">— / —</div>
+    <button class="hdr-btn" id="focus-btn" onclick="toggleFocus()">Focus</button>
+    <button class="hdr-btn export-btn" onclick="exportMD()" title="Ctrl+S">Export MD</button>
+    <button class="hdr-btn help-btn" onclick="openHelp()">/help</button>
+  </div>
+</header>
+
+<div class="sync-banner warn" id="sync-banner">
+  <span id="sync-msg">📎 Link this file to enable portable auto-saving — your notes are embedded directly in the HTML.</span>
+  <button class="sbtn" id="sync-action-btn" onclick="linkFile()">Link file</button>
+  <button class="sdismiss" onclick="dismissBanner()" title="Dismiss">✕</button>
+</div>
+
+<nav class="cat-nav" id="cat-nav"></nav>
+<main class="main" id="main-el">
+  <div id="panel-ask" class="panel active"></div>
+  <div id="panel-prep" class="panel"></div>
+</main>
+
+<button class="fab" onclick="openModal()" title="Add question">+</button>
+
+<!-- Add question modal -->
+<div class="modal-bg hidden" id="modal" onclick="bgClose(event,'modal')">
+  <div class="modal-box">
+    <div class="modal-title">Add a question</div>
+    <div class="frow">
+      <label class="flbl">Section</label>
+      <select class="fi" id="m-tab" onchange="updateModalCats()">
+        <option value="ask">Questions to Ask</option>
+        <option value="prep">Questions to Prepare</option>
+      </select>
+    </div>
+    <div class="frow">
+      <label class="flbl">Category <span>(or type a new one)</span></label>
+      <input class="fi" id="m-cat" list="m-cat-list" placeholder="Select or type a category">
+      <datalist id="m-cat-list"></datalist>
+    </div>
+    <div class="frow">
+      <label class="flbl">Question</label>
+      <textarea class="fi" id="m-text" placeholder="Type your question..."></textarea>
+    </div>
+    <div class="frow">
+      <label class="flbl">Guidance <span>(optional)</span></label>
+      <textarea class="fi" id="m-guidance" placeholder="How to approach this — timing, what to emphasise..." style="min-height:60px"></textarea>
+    </div>
+    <div class="frow">
+      <label class="flbl">Answer type</label>
+      <select class="fi" id="m-guide">
+        <option value="short">Short — 1–2 sentences</option>
+        <option value="listen">Listen — let them talk, take notes</option>
+        <option value="star" selected>STAR story — 3–4 min</option>
+        <option value="tech">Technical — 1–2 min, specific</option>
+        <option value="medium">Medium — 2–3 min, structured</option>
+        <option value="motiv">Motivation — 1–2 min, genuine</option>
+        <option value="concise">Concise — direct, avoid rambling</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn" onclick="closeModal('modal')">Cancel</button>
+      <button class="mbtn primary" onclick="submitModal()">Add question</button>
+    </div>
+  </div>
+</div>
+
+<!-- Help modal -->
+<div class="modal-bg hidden" id="help-modal" onclick="bgClose(event,'help-modal')">
+  <div class="modal-box help-box">
+    <div class="help-header">
+      <div class="help-title">Interview Prep — help</div>
+      <div class="help-version">v2.0 · self-writing html</div>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">What this is</div>
+      <div class="help-row"><div class="help-icon">🗂</div><div class="help-text">A portable, offline-first interview prep tool. <strong>Your notes live inside the HTML file itself</strong> — copy it anywhere and everything travels with it. No account, no server, no cloud.</div></div>
+      <div class="help-row"><div class="help-icon">✏️</div><div class="help-text">Set the role and company in the header. Switch between <strong>Questions to Ask</strong> (for you to ask the panel) and <strong>Questions to Prepare</strong> (for you to answer). Add your own questions, reorder, and take notes on each.</div></div>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Linking the file — portable saving</div>
+      <ol class="step-list">
+        <li>Save this HTML file somewhere permanent (e.g. Desktop or Dropbox).</li>
+        <li>Open it in <strong>Chrome or Edge</strong>. Click <strong>Link file</strong> in the yellow banner.</li>
+        <li>In the file picker that opens, navigate to and select <em>this same HTML file</em>.</li>
+        <li>Done. Every note you type is now written back into the file within half a second.</li>
+      </ol>
+      <div class="help-tip"><strong>Why Chrome/Edge?</strong> The File System Access API — which allows the file to rewrite itself — is only fully supported in Chromium browsers. In Safari or Firefox, notes still save to browser storage (localStorage) and you can export to MD, but they won't travel with the file.</div>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">During the interview</div>
+      <div class="help-row"><div class="help-icon">🎯</div><div class="help-text">Hit <strong>Focus</strong> in the header. This hides guidance, reorder controls, and delete buttons — leaving just question + notes field + done checkbox. Nothing to accidentally click.</div></div>
+      <div class="help-row"><div class="help-icon">📍</div><div class="help-text">The <strong>category pills</strong> in the sub-header stay fixed as you scroll and highlight your position. Click any pill to jump to that section instantly.</div></div>
+      <div class="help-row"><div class="help-icon">✅</div><div class="help-text">Tick questions off as you go. The <strong>progress counter</strong> (e.g. 3 / 14) tracks your current tab.</div></div>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Guidance badges</div>
+      <div class="badge-grid" style="margin-bottom:8px">
+        <span class="badge-explain"><span class="g-badge gb-short">Short</span> 1–2 sentences. Clarifying question — listen and note specifics.</span>
+        <span class="badge-explain"><span class="g-badge gb-listen">Listen</span> Open-ended. Let them talk. Note what they emphasise and omit.</span>
+        <span class="badge-explain"><span class="g-badge gb-star">STAR story</span> Structured 3–4 min answer: Situation, Task, Action, Result.</span>
+        <span class="badge-explain"><span class="g-badge gb-tech">Technical</span> 1–2 min. Specific tools, examples, scale. Avoid vague generalisations.</span>
+        <span class="badge-explain"><span class="g-badge gb-medium">Medium</span> 2–3 min. Deliberate, structured — show your thinking process.</span>
+        <span class="badge-explain"><span class="g-badge gb-motiv">Motivation</span> 1–2 min. Be genuine and specific. They can tell the difference.</span>
+        <span class="badge-explain"><span class="g-badge gb-concise">Concise</span> Answer directly. Don't over-explain or pad.</span>
+      </div>
+      <div class="help-text" style="font-size:12px">Tap the badge on any card to reveal the full guidance note for that question.</div>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Keyboard shortcuts</div>
+      <table class="kbd-table">
+        <tr><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>Export notes as a Markdown file</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Close any open modal</td></tr>
+        <tr><td><kbd>Tab</kbd></td><td>Move between note fields naturally</td></tr>
+      </table>
+    </div>
+
+    <div class="help-section">
+      <div class="help-section-title">Managing questions</div>
+      <div class="help-row"><div class="help-icon">＋</div><div class="help-text">Click <strong>+ Add question</strong> next to any category header, or the blue <strong>+</strong> button at bottom-right. You can create new categories by typing a new name in the Category field.</div></div>
+      <div class="help-row"><div class="help-icon">⠿</div><div class="help-text">Hover any card to reveal the <strong>drag handle</strong> on the left. Drag to reorder within a category. Or use the <strong>↑ ↓</strong> buttons on the right.</div></div>
+      <div class="help-row"><div class="help-icon">✕</div><div class="help-text">Hover a card and click <strong>✕</strong> to delete it. This cannot be undone, but the original questions are reset-able via the… <em>actually, just don't delete things you didn't add.</em></div></div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="mbtn primary" onclick="closeModal('help-modal')">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!--DATA:START-->
+<script type="application/json" id="app-data">
+{"role":"","qs":[{"id":"a01","tab":"ask","cat":"Role & Scope","ord":10,"done":false,"notes":"","text":"What does success look like in the first 90 days, and how will that be measured?","guidance":"Let them be specific. If vague, probe: \"What would you want to see delivered or understood by day 30?\" Clear criteria signal a well-thought-through role. Note whatever they emphasise — that's what actually matters to them.","guide":"listen"},{"id":"a02","tab":"ask","cat":"Role & Scope","ord":20,"done":false,"notes":"","text":"Is this a new role or are you replacing someone — and what prompted the opening?","guidance":"A direct but important question. \"New role\" tells you the function is growing or evolving. A replacement tells you someone left — worth understanding why if you can. Their comfort with the question is itself useful information.","guide":"short"},{"id":"a03","tab":"ask","cat":"Role & Scope","ord":30,"done":false,"notes":"","text":"What are the most pressing priorities for this role in the first six months, and what's driving them?","guidance":"Note the order they mention priorities and the business rationale behind each. This tells you where your time will actually go vs what the job description implies. No rationale = reactive function.","guide":"listen"},{"id":"a04","tab":"ask","cat":"Role & Scope","ord":40,"done":false,"notes":"","text":"How is performance measured and reviewed in this role — what does a strong performer look like vs an average one?","guidance":"A question that reveals what they actually value. The contrast between strong and average is particularly useful — vague answers often mean unclear expectations ahead. Note specific metrics or behaviours if offered.","guide":"listen"},{"id":"a05","tab":"ask","cat":"Team & Culture","ord":10,"done":false,"notes":"","text":"How would you describe the team culture — how do people work together day-to-day?","guidance":"Open-ended. Let them talk. Listen for: what they praise vs gloss over, whether they mention trust or autonomy, how they describe disagreement. Culture answers reveal what leadership values — not just what they aspire to.","guide":"listen"},{"id":"a06","tab":"ask","cat":"Team & Culture","ord":20,"done":false,"notes":"","text":"What does the team structure look like, and who would I be working most closely with?","guidance":"You want org chart clarity: direct peers, reporting line, adjacent teams, cross-functional relationships. The more specific they can be, the more they've thought through the role. Names are useful for pre-interview research.","guide":"short"},{"id":"a07","tab":"ask","cat":"Team & Culture","ord":30,"done":false,"notes":"","text":"How does the team typically handle disagreement or differing opinions?","guidance":"A culture diagnostic. \"We're very collaborative\" is generic. Listen for: psychological safety, whether challenge is welcomed, how decisions get made when people disagree. Uncomfortable pauses are informative.","guide":"listen"},{"id":"a08","tab":"ask","cat":"Team & Culture","ord":40,"done":false,"notes":"","text":"What do people who thrive in this team tend to have in common?","guidance":"Reveals the unwritten requirements of the role — personality, working style, values — that don't appear in the job description. Compare what they say against what you know about yourself.","guide":"listen"},{"id":"a09","tab":"ask","cat":"Growth & Development","ord":10,"done":false,"notes":"","text":"What does career progression typically look like from this role — where have people gone from here?","guidance":"Concrete examples (\"our last two people in this role moved into X\") carry far more weight than general statements about growth. If they can't name examples, that's a signal.","guide":"short"},{"id":"a10","tab":"ask","cat":"Growth & Development","ord":20,"done":false,"notes":"","text":"How does the organisation support professional development — what does that look like in practice?","guidance":"\"We have a learning budget\" is very different from a specific answer about how it's used. Ask what budget, whether it's encouraged, and whether they can name someone who has used it recently.","guide":"short"},{"id":"a11","tab":"ask","cat":"Company & Strategy","ord":10,"done":false,"notes":"","text":"What are the company's biggest challenges or opportunities over the next 12–18 months?","guidance":"A strategic question that reveals how clearly leadership thinks about the future. Confident, specific answers are a good sign. Deflection or pure positivity may signal avoidance. Note the tension between challenges and opportunities.","guide":"listen"},{"id":"a12","tab":"ask","cat":"Company & Strategy","ord":20,"done":false,"notes":"","text":"How does this role specifically contribute to the broader company strategy?","guidance":"Tests whether the role has genuine strategic purpose or is operational/support in nature. Neither is bad, but knowing which one it is matters. Vague answers suggest the link hasn't been thought through.","guide":"short"},{"id":"a13","tab":"ask","cat":"Company & Strategy","ord":30,"done":false,"notes":"","text":"What makes people stay at this company long-term — what keeps them here?","guidance":"The retention question is often more revealing than \"what's the culture like.\" Specific reasons (mission, autonomy, people, growth) are good. \"The pay\" or a long pause is worth noting.","guide":"listen"},{"id":"a14","tab":"ask","cat":"Practical","ord":10,"done":false,"notes":"","text":"What does a typical week look like for someone in this role?","guidance":"A grounding question. Gets into the day-to-day reality vs the aspirational job description. Listen for how much of the role is reactive vs proactive, meeting-heavy vs focused work, and whether expectations are realistic.","guide":"short"},{"id":"a15","tab":"ask","cat":"Practical","ord":20,"done":false,"notes":"","text":"Is there anything in my background or application that gives you pause? I'm happy to address it directly.","guidance":"Ask this at the end. A confident panel will engage honestly. It surfaces objections you can address on the spot — and the willingness to ask it signals self-awareness and confidence. Note any hesitation in their body language even if they say \"no\".","guide":"short"},{"id":"a16","tab":"ask","cat":"Practical","ord":30,"done":false,"notes":"","text":"What are the next steps in the process, and what's the expected timeline?","guidance":"Always ask this last. You want: what happens next, how many rounds remain, who else is involved, and when you should expect to hear. Sets clear expectations and shows you're engaged.","guide":"short"},{"id":"p01","tab":"prep","cat":"About You","ord":10,"done":false,"notes":"","text":"Tell me about yourself — walk me through your background.","guidance":"2–3 minutes. This is not your life story. Structure: where you started → what you focused on and why → what you're known for → why you're here now. Each step should logically connect to the next. End on the role you're interviewing for. Practice until it flows naturally, not robotically.","guide":"concise"},{"id":"p02","tab":"prep","cat":"About You","ord":20,"done":false,"notes":"","text":"Why are you interested in this role and this company specifically?","guidance":"1–2 min. Be specific to THIS role and THIS company — not generic enthusiasm. Three layers: why this type of role (what it lets you do), why this company (something specific you've researched), why now in your career. Generic answers are immediately obvious and damaging.","guide":"motiv"},{"id":"p03","tab":"prep","cat":"About You","ord":30,"done":false,"notes":"","text":"What would you say are your key strengths — and can you give a brief example of each?","guidance":"2 min. Pick 2–3 strengths that are genuinely relevant to the role. For each: name it, give a one-sentence example, and connect it to why it matters here. Don't list without evidence — listing is forgettable, examples are memorable.","guide":"concise"},{"id":"p04","tab":"prep","cat":"About You","ord":40,"done":false,"notes":"","text":"What's an area you're actively working to develop?","guidance":"1–2 min. A genuine answer, not a \"strength in disguise\" (\"I work too hard\"). Pick something real that's not a critical requirement of the role. Show self-awareness + that you're actively addressing it. End on progress made, not on the gap.","guide":"concise"},{"id":"p05","tab":"prep","cat":"About You","ord":50,"done":false,"notes":"","text":"Why are you looking to leave your current role?","guidance":"1 min. Be honest, professional, and forward-looking. Never criticise your current employer. Frame around what you're moving toward (growth, challenge, alignment with values) not what you're running from. Prepare for a follow-up: \"Is there anything that would make you stay?\"","guide":"concise"},{"id":"p06","tab":"prep","cat":"Behavioural","ord":10,"done":false,"notes":"","text":"Tell me about a significant achievement you're particularly proud of.","guidance":"3–4 min STAR. Choose something with a clear result — ideally quantified. Situation: very brief context. Task: your specific responsibility. Action: the bulk of your answer — what you specifically did and why. Result: the outcome plus what it meant for the team/organisation. Don't undersell the result.","guide":"star"},{"id":"p07","tab":"prep","cat":"Behavioural","ord":20,"done":false,"notes":"","text":"Describe a time you faced a significant setback or failure. What happened and what did you do?","guidance":"3–4 min STAR. Choose something real, not trivially small. The quality of your response matters more than the severity of the failure. Show: you owned it (no blame-shifting), you diagnosed what went wrong, you adapted, and you applied that learning subsequently. End forward-looking.","guide":"star"},{"id":"p08","tab":"prep","cat":"Behavioural","ord":30,"done":false,"notes":"","text":"Tell me about a time you had to influence someone without direct authority.","guidance":"3–4 min STAR. Frame around: understanding their perspective and motivations first, finding common ground, using data and relationship to shift the conversation. Avoid framing it as \"I convinced them I was right.\" Show collaboration, not persuasion by force.","guide":"star"},{"id":"p09","tab":"prep","cat":"Behavioural","ord":40,"done":false,"notes":"","text":"Describe a situation where you had to manage competing priorities under significant pressure. How did you handle it?","guidance":"3–4 min STAR. Show your decision-making process — how you triaged, what you communicated, how you maintained quality. The detail of your action is what differentiates you. Avoid generic answers like \"I made a list\" — specificity signals real experience.","guide":"star"},{"id":"p10","tab":"prep","cat":"Behavioural","ord":50,"done":false,"notes":"","text":"Tell me about a time you had to adapt quickly to a major change or unexpected situation.","guidance":"3–4 min STAR. Shows resilience and flexibility. Focus on: how you processed the change (not just reacted), how you brought others with you if relevant, and what the outcome was. Growth mindset language is strong here — what did you learn?","guide":"star"},{"id":"p11","tab":"prep","cat":"Behavioural","ord":60,"done":false,"notes":"","text":"Give me an example of a time you worked through a conflict with a colleague or stakeholder.","guidance":"3–4 min STAR. A test of emotional intelligence and communication. Key elements: you sought to understand their perspective before asserting your own, you addressed the issue directly rather than avoiding it, and the relationship was preserved or strengthened. Don't make the other person the villain.","guide":"star"},{"id":"p12","tab":"prep","cat":"Leadership & Collaboration","ord":10,"done":false,"notes":"","text":"Tell me about a time you led a team or project. How did you approach it?","guidance":"3–4 min STAR. Even if your leadership was informal, frame it deliberately. Show: how you set direction, how you kept people aligned, how you handled setbacks, and how you developed others. Leadership is revealed in how you talk about the people, not just the outcome.","guide":"star"},{"id":"p13","tab":"prep","cat":"Leadership & Collaboration","ord":20,"done":false,"notes":"","text":"How do you build relationships quickly with new colleagues or stakeholders?","guidance":"2 min. Describe a real approach, not a platitude. Common strong answers: listening first before proposing, learning their priorities and language, small early wins that build trust, being transparent about your own working style. Give a specific example of doing this well.","guide":"medium"},{"id":"p14","tab":"prep","cat":"Leadership & Collaboration","ord":30,"done":false,"notes":"","text":"Describe a time you gave difficult feedback to someone. How did you approach it?","guidance":"2–3 min STAR. A test of psychological courage + empathy. Show: you prepared specifically, you were direct but compassionate, you focused on behaviour not character, and you gave the person agency to respond. What happened afterwards matters — did the relationship survive and the behaviour change?","guide":"star"},{"id":"p15","tab":"prep","cat":"Situational","ord":10,"done":false,"notes":"","text":"Where do you see yourself in three to five years?","guidance":"1–2 min. Show ambition without overreaching. Connect your answer to genuine growth in the domain relevant to this role — deeper expertise, broader scope, more impact. Avoid specific titles (\"I want your job\") or obvious non-answers (\"still growing\"). Research what realistic progression looks like here first.","guide":"concise"},{"id":"p16","tab":"prep","cat":"Situational","ord":20,"done":false,"notes":"","text":"How do you approach learning something new quickly — a new domain, tool, or environment?","guidance":"2 min. Describe a real method, not a generic \"I'm a fast learner.\" Strong answers include: how you structure the learning (what to prioritise first), how you find and use experts, how you track progress, and a specific example of having done it successfully.","guide":"medium"},{"id":"p17","tab":"prep","cat":"Situational","ord":30,"done":false,"notes":"","text":"What questions do you have for us?","guidance":"Always have 3 ready from your 'Questions to Ask' tab. This is not a formality — it's evaluated. Great questions show you've done your research, thought carefully about the role, and are genuinely interested. Avoid questions about salary, hours, or holidays at this stage.","guide":"concise"}]}
+</script>
+<!--DATA:END-->
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+const GUIDE_LABELS = { short:'Short — 1–2 sentences', listen:'Listen & note', star:'STAR story — 3–4 min', tech:'Technical — 1–2 min', medium:'Medium — 2–3 min', motiv:'Motivation — 1–2 min', concise:'Concise — direct answer' };
+const GUIDE_CLASS  = { short:'gb-short', listen:'gb-listen', star:'gb-star', tech:'gb-tech', medium:'gb-medium', motiv:'gb-motiv', concise:'gb-concise' };
+const DEFAULT_CATS = {
+  ask:  ['Role & Scope','Team & Culture','Growth & Development','Company & Strategy','Practical'],
+  prep: ['About You','Behavioural','Leadership & Collaboration','Situational']
+};
+
+// ── State ──────────────────────────────────────────────────────────────────
+let qs = [], role = '', currentTab = 'ask', focusMode = false;
+let dragSrcId = null, fileHandle = null, writeTimer = null;
+
+// ── IndexedDB ──────────────────────────────────────────────────────────────
+const IDB = 'iv-prep', IDB_S = 'handles';
+function openIDB() { return new Promise((res,rej)=>{ const r=indexedDB.open(IDB,1); r.onupgradeneeded=e=>e.target.result.createObjectStore(IDB_S); r.onsuccess=e=>res(e.target.result); r.onerror=()=>rej(r.error); }); }
+async function idbGet(k) { try { const db=await openIDB(); return new Promise(res=>{ const r=db.transaction(IDB_S).objectStore(IDB_S).get(k); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); }); } catch { return null; } }
+async function idbSet(k,v) { try { const db=await openIDB(); return new Promise(res=>{ const tx=db.transaction(IDB_S,'readwrite'); tx.objectStore(IDB_S).put(v,k); tx.oncomplete=res; }); } catch {} }
+
+// ── Load ───────────────────────────────────────────────────────────────────
+function load() {
+  try {
+    const raw = JSON.parse(document.getElementById('app-data').textContent);
+    qs = raw.qs || []; role = raw.role || '';
+  } catch {}
+  if (!qs.length) {
+    try { const r=localStorage.getItem('iv-prep-v1'); if(r){ const d=JSON.parse(r); qs=d.qs||[]; role=d.role||''; } } catch {}
+  }
+  if (role) document.getElementById('role-input').value = role;
+}
+
+// ── Save / sync ────────────────────────────────────────────────────────────
+function dot(state) { const d=document.getElementById('sync-dot'); d.className='sync-dot '+state; const t={saving:'Saving…',saved:'Saved to file ✓',unlinked:'File not linked — notes in browser only'}; d.title=t[state]||''; }
+function persist() {
+  const payload = { role, qs };
+  try { localStorage.setItem('iv-prep-v1', JSON.stringify(payload)); } catch {}
+  if (fileHandle) { dot('saving'); clearTimeout(writeTimer); writeTimer = setTimeout(()=>writeToFile(payload), 500); }
+}
+async function writeToFile(payload) {
+  if (!fileHandle) return;
+  try {
+    const perm = await fileHandle.queryPermission({ mode:'readwrite' });
+    if (perm !== 'granted') { const req = await fileHandle.requestPermission({ mode:'readwrite' }); if (req !== 'granted') { dot('unlinked'); return; } }
+    const text = await (await fileHandle.getFile()).text();
+    const marker = /<!--DATA:START-->[\s\S]*?<!--DATA:END-->/;
+    if (!marker.test(text)) { dot('unlinked'); return; }
+    const block = `<!--DATA:START-->\n<script type="application/json" id="app-data">\n${JSON.stringify(payload)}\n<\/script>\n<!--DATA:END-->`;
+    const updated = text.replace(marker, block);
+    const w = await fileHandle.createWritable(); await w.write(updated); await w.close();
+    dot('saved');
+  } catch(e) { console.warn(e); dot('unlinked'); }
+}
+
+// ── File linking ───────────────────────────────────────────────────────────
+async function tryRestoreHandle() {
+  const h = await idbGet('fh');
+  if (!h) return false;
+  try {
+    const perm = await h.queryPermission({ mode:'readwrite' });
+    if (perm === 'granted') { fileHandle = h; showBannerOk(`✓ Auto-saving to: ${h.name}`); dot('saved'); return true; }
+    showBannerWarn(`Re-link to continue auto-saving to <strong>${h.name}</strong>`, 'Re-link', async () => {
+      const req = await h.requestPermission({ mode:'readwrite' });
+      if (req === 'granted') { fileHandle = h; showBannerOk(`✓ Auto-saving to: ${h.name}`); dot('saved'); }
+    });
+    return false;
+  } catch { return false; }
+}
+async function linkFile() {
+  if (!('showOpenFilePicker' in window)) { showToast('File linking requires Chrome or Edge'); return; }
+  try {
+    const [h] = await window.showOpenFilePicker({ types:[{description:'HTML file',accept:{'text/html':['.html']}}], multiple:false });
+    const text = await (await h.getFile()).text();
+    if (!text.includes('<!--DATA:START-->')) { showToast('Please select this interview prep HTML file'); return; }
+    fileHandle = h; await idbSet('fh', h);
+    showBannerOk(`✓ Auto-saving to: ${h.name}`);
+    dot('saved'); persist(); showToast('File linked — notes self-save ✓');
+  } catch(e) { if (e.name !== 'AbortError') showToast('Could not link file'); }
+}
+
+// ── Banner ─────────────────────────────────────────────────────────────────
+function showBannerWarn(msg, btnLabel, btnFn) {
+  const b=document.getElementById('sync-banner'), m=document.getElementById('sync-msg'), ab=document.getElementById('sync-action-btn');
+  b.className='sync-banner warn'; m.innerHTML=msg; ab.textContent=btnLabel; ab.onclick=btnFn;
+  b.classList.remove('hidden'); shiftLayout(true);
+}
+function showBannerOk(msg) {
+  const b=document.getElementById('sync-banner'), m=document.getElementById('sync-msg');
+  b.className='sync-banner ok'; m.innerHTML=msg; b.classList.remove('hidden');
+  setTimeout(()=>{ b.classList.add('hidden'); shiftLayout(false); }, 3000);
+}
+function dismissBanner() { document.getElementById('sync-banner').classList.add('hidden'); shiftLayout(false); }
+function shiftLayout(on) { document.getElementById('cat-nav').classList.toggle('shifted',on); document.getElementById('main-el').classList.toggle('shifted',on); }
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function tabQs(tab) { return qs.filter(q=>q.tab===tab); }
+function catOrder(tab) {
+  const seen=new Set(), out=[];
+  DEFAULT_CATS[tab].forEach(c=>{ seen.add(c); out.push(c); });
+  tabQs(tab).forEach(q=>{ if(!seen.has(q.cat)){ seen.add(q.cat); out.push(q.cat); } });
+  return out;
+}
+function genId() { return 'q'+Date.now()+Math.random().toString(36).slice(2,6); }
+function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  ['ask','prep'].forEach(tab=>{ document.getElementById('panel-'+tab).innerHTML = catOrder(tab).map(cat=>renderSection(tab,cat)).join(''); });
+  renderCatNav(); updateProgress(); bindTextareas(); bindDrag(); bindScrollSpy();
+}
+function renderSection(tab,cat) {
+  const list = qs.filter(q=>q.tab===tab&&q.cat===cat).sort((a,b)=>a.ord-b.ord);
+  return `<div class="cat-section" id="cat-${slug(cat)}">
+    <div class="cat-label"><span>${esc(cat)}</span><button class="add-in-cat" onclick="openModal('${tab}','${esc(cat)}')">+ Add question</button></div>
+    <div class="q-list" data-tab="${tab}" data-cat="${esc(cat)}">${list.map(renderCard).join('')}</div>
+  </div>`;
+}
+function renderCard(q) {
+  const gl=GUIDE_LABELS[q.guide]||q.guide, gc=GUIDE_CLASS[q.guide]||'gb-concise';
+  return `<div class="q-card${q.done?' done':''}" id="card-${q.id}" draggable="true" data-id="${q.id}">
+    <div class="q-top">
+      <div class="drag-h">⠿</div>
+      <div class="q-chk${q.done?' on':''}" onclick="toggleDone('${q.id}')"></div>
+      <div class="q-body"><div class="q-text">${esc(q.text)}</div></div>
+      <div class="q-acts">
+        <button class="q-icn" onclick="moveCard('${q.id}',-1)" title="Move up">↑</button>
+        <button class="q-icn" onclick="moveCard('${q.id}',1)" title="Move down">↓</button>
+        <button class="q-icn del" onclick="delCard('${q.id}')" title="Delete">✕</button>
+      </div>
+    </div>
+    <div class="gt-wrap">
+      <button class="gt-btn" onclick="toggleGuide('${q.id}',this)">
+        <span class="gt-arrow">▶</span>
+        <span class="g-badge ${gc}">${esc(gl)}</span>
+        <span class="gt-hint">— tap for guidance</span>
+      </button>
+      <div class="q-guidance" id="guide-${q.id}">${esc(q.guidance)}</div>
+    </div>
+    <div class="q-nwrap">
+      <textarea class="q-notes" id="notes-${q.id}" placeholder="Add your notes here…" oninput="autoResize(this);onNote('${q.id}',this.value)">${esc(q.notes)}</textarea>
+    </div>
+  </div>`;
+}
+function renderCatNav() {
+  document.getElementById('cat-nav').innerHTML = catOrder(currentTab)
+    .map(cat=>`<a class="cat-pill" href="#cat-${slug(cat)}" onclick="markPill(this)">${esc(cat)}</a>`).join('');
+}
+function updateProgress() {
+  const list=tabQs(currentTab);
+  document.getElementById('prog').textContent = list.filter(q=>q.done).length+' / '+list.length;
+}
+
+// ── Interactions ───────────────────────────────────────────────────────────
+function onRoleChange(val) { role=val; persist(); }
+function switchTab(tab) {
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['ask','prep'][i]===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+tab));
+  renderCatNav(); updateProgress();
+}
+function toggleDone(id) {
+  const q=qs.find(x=>x.id===id); if(!q) return;
+  q.done=!q.done;
+  const card=document.getElementById('card-'+id);
+  card.classList.toggle('done',q.done); card.querySelector('.q-chk').classList.toggle('on',q.done);
+  updateProgress(); persist();
+}
+function toggleGuide(id,btn) { document.getElementById('guide-'+id).classList.toggle('vis'); btn.classList.toggle('open'); }
+function onNote(id,val) { const q=qs.find(x=>x.id===id); if(q){ q.notes=val; persist(); } }
+function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function bindTextareas() { document.querySelectorAll('textarea.q-notes').forEach(autoResize); }
+function moveCard(id,dir) {
+  const q=qs.find(x=>x.id===id); if(!q) return;
+  const sib=qs.filter(x=>x.tab===q.tab&&x.cat===q.cat).sort((a,b)=>a.ord-b.ord);
+  const idx=sib.findIndex(x=>x.id===id), swi=idx+dir;
+  if(swi<0||swi>=sib.length) return;
+  [q.ord,sib[swi].ord]=[sib[swi].ord,q.ord];
+  const el=document.querySelector(`.q-list[data-tab="${q.tab}"][data-cat="${q.cat}"]`);
+  if(el){ el.innerHTML=qs.filter(x=>x.tab===q.tab&&x.cat===q.cat).sort((a,b)=>a.ord-b.ord).map(renderCard).join(''); bindTextareas(); bindDrag(); }
+  persist();
+}
+function delCard(id) {
+  if(!confirm('Remove this question?')) return;
+  qs=qs.filter(x=>x.id!==id); document.getElementById('card-'+id)?.remove();
+  updateProgress(); persist();
+}
+function toggleFocus() {
+  focusMode=!focusMode; document.body.classList.toggle('focus-mode',focusMode);
+  const btn=document.getElementById('focus-btn');
+  btn.textContent=focusMode?'Exit Focus':'Focus'; btn.classList.toggle('focus-on',focusMode);
+}
+
+// ── Drag & drop ────────────────────────────────────────────────────────────
+function bindDrag() {
+  document.querySelectorAll('.q-card').forEach(card=>{
+    card.addEventListener('dragstart',e=>{ dragSrcId=card.dataset.id; e.dataTransfer.effectAllowed='move'; setTimeout(()=>card.classList.add('dragging'),0); });
+    card.addEventListener('dragend',()=>{ card.classList.remove('dragging'); document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('drag-over')); dragSrcId=null; });
+    card.addEventListener('dragover',e=>{ e.preventDefault(); if(card.dataset.id===dragSrcId) return; const s=qs.find(x=>x.id===dragSrcId),t=qs.find(x=>x.id===card.dataset.id); if(s&&t&&s.tab===t.tab&&s.cat===t.cat){ document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('drag-over')); card.classList.add('drag-over'); } });
+    card.addEventListener('dragleave',()=>card.classList.remove('drag-over'));
+    card.addEventListener('drop',e=>{ e.preventDefault(); if(!dragSrcId||card.dataset.id===dragSrcId) return; const s=qs.find(x=>x.id===dragSrcId),t=qs.find(x=>x.id===card.dataset.id); if(s&&t&&s.tab===t.tab&&s.cat===t.cat){ [s.ord,t.ord]=[t.ord,s.ord]; const el=document.querySelector(`.q-list[data-tab="${s.tab}"][data-cat="${s.cat}"]`); if(el){ el.innerHTML=qs.filter(x=>x.tab===s.tab&&x.cat===s.cat).sort((a,b)=>a.ord-b.ord).map(renderCard).join(''); bindTextareas(); bindDrag(); } persist(); } });
+  });
+}
+
+// ── Scroll spy ─────────────────────────────────────────────────────────────
+let spyObs=null;
+function bindScrollSpy() {
+  if(spyObs) spyObs.disconnect();
+  spyObs=new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting){ const id='#'+e.target.id; document.querySelectorAll('.cat-pill').forEach(p=>p.classList.toggle('active',p.getAttribute('href')===id)); } }); },{ rootMargin:'-15% 0px -75% 0px' });
+  document.querySelectorAll('.cat-section').forEach(s=>spyObs.observe(s));
+}
+function markPill(el) { document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
+
+// ── Modals ─────────────────────────────────────────────────────────────────
+function openModal(tab,cat) {
+  document.getElementById('m-tab').value=tab||currentTab; updateModalCats();
+  if(cat) document.getElementById('m-cat').value=cat;
+  document.getElementById('m-text').value=''; document.getElementById('m-guidance').value=''; document.getElementById('m-guide').value='star';
+  document.getElementById('modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('m-text').focus(),100);
+}
+function updateModalCats() {
+  const tab=document.getElementById('m-tab').value;
+  document.getElementById('m-cat-list').innerHTML=catOrder(tab).map(c=>`<option value="${esc(c)}">`).join('');
+  document.getElementById('m-cat').value='';
+}
+document.getElementById('m-tab').addEventListener('change',updateModalCats);
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function bgClose(e,id) { if(e.target===document.getElementById(id)) closeModal(id); }
+function submitModal() {
+  const tab=document.getElementById('m-tab').value, cat=document.getElementById('m-cat').value.trim();
+  const text=document.getElementById('m-text').value.trim(), guidance=document.getElementById('m-guidance').value.trim();
+  const guide=document.getElementById('m-guide').value;
+  if(!cat){ document.getElementById('m-cat').focus(); return; }
+  if(!text){ document.getElementById('m-text').focus(); return; }
+  const sib=qs.filter(x=>x.tab===tab&&x.cat===cat);
+  qs.push({ id:genId(), tab, cat, ord: sib.length ? Math.max(...sib.map(x=>x.ord))+10 : 10, done:false, notes:'', text, guide, guidance: guidance||'Consider how to approach this clearly and concisely.' });
+  closeModal('modal'); render(); persist();
+  showToast('Question added');
+  setTimeout(()=>document.querySelector(`#cat-${slug(cat)} .q-list .q-card:last-child`)?.scrollIntoView({behavior:'smooth',block:'center'}),150);
+}
+function openHelp() { document.getElementById('help-modal').classList.remove('hidden'); }
+
+// ── Export MD ──────────────────────────────────────────────────────────────
+function generateMD() {
+  const d=new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'});
+  const title = role ? `Interview Prep — ${role}` : 'Interview Prep';
+  let md=`# ${title}\n\n_Last updated: ${d}_\n\n---\n\n`;
+  ['ask','prep'].forEach(tab=>{
+    md+=`## ${tab==='ask'?'Questions to Ask Them':'Questions to Prepare For'}\n\n`;
+    catOrder(tab).forEach(cat=>{
+      const list=qs.filter(x=>x.tab===tab&&x.cat===cat).sort((a,b)=>a.ord-b.ord);
+      if(!list.length) return;
+      md+=`### ${cat}\n\n`;
+      list.forEach(q=>{ md+=`**${q.done?'✅':'⬜'} ${q.text}**\n\n> *${GUIDE_LABELS[q.guide]||q.guide}*\n${q.guidance?'> '+q.guidance+'\n':''}\n**Notes:** ${q.notes||'*(none yet)*'}\n\n---\n\n`; });
+    });
+  });
+  return md;
+}
+async function exportMD() {
+  const md=generateMD(), name=(role?role.replace(/[^a-z0-9]/gi,'-').toLowerCase():'interview-prep')+'.md';
+  if('showSaveFilePicker' in window) {
+    try { const fh=await window.showSaveFilePicker({suggestedName:name,types:[{description:'Markdown',accept:{'text/markdown':['.md']}}]}); const w=await fh.createWritable(); await w.write(md); await w.close(); showToast('Exported ✓'); return; }
+    catch(e){ if(e.name==='AbortError') return; }
+  }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([md],{type:'text/markdown'})); a.download=name; a.click();
+  showToast('Downloaded ✓');
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+let toastT=null;
+function showToast(msg) { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('vis'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('vis'),2200); }
+
+// ── Keys ───────────────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal('modal'); closeModal('help-modal'); } if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); exportMD(); } });
+
+// ── Init ───────────────────────────────────────────────────────────────────
+load(); render();
+(async()=>{ const ok=await tryRestoreHandle(); if(!ok) shiftLayout(true); })();
+</script>
+</body>
+</html>
