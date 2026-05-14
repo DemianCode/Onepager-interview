@@ -19,12 +19,14 @@
   --gm-bg:#ede9fe; --gm-c:#5b21b6;
   --gmo-bg:#fee2e2; --gmo-c:#991b1b;
   --gc-bg:#f1f5f9; --gc-c:#475569;
+  --z-nav: 90; --z-banner: 95; --z-header: 100; --z-fab: 200; --z-modal: 300; --z-toast: 400;
+  --transition: 0.15s;
 }
 html { scroll-behavior: smooth; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
 
 /* ── Sync banner ── */
-.sync-banner { position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 95; padding: 7px 1.25rem; display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500; transition: all 0.2s; }
+.sync-banner { position: fixed; top: var(--header-h); left: 0; right: 0; z-index: var(--z-banner); padding: 7px 1.25rem; display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500; transition: all var(--transition); }
 .sync-banner.hidden { display: none; }
 .sync-banner.warn { background: #fef3c7; color: #92400e; border-bottom: 1px solid #fde68a; }
 .sync-banner.ok   { background: #d1fae5; color: #065f46; border-bottom: 1px solid #a7f3d0; }
@@ -33,19 +35,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Ne
 .sync-banner.ok .sbtn, .sync-banner.ok .sdismiss { display: none; }
 
 /* ── Header ── */
-.hdr { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--navy); display: flex; align-items: center; padding: 0 1.25rem; gap: 10px; z-index: 100; }
+.hdr { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--navy); display: flex; align-items: center; padding: 0 1.25rem; gap: 10px; z-index: var(--z-header); }
 .role-wrap { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; }
 .role-label { font-size: 11px; color: rgba(255,255,255,0.4); white-space: nowrap; flex-shrink: 0; }
 .role-input { background: transparent; border: none; outline: none; color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 500; font-family: inherit; flex: 1; min-width: 0; }
 .role-input::placeholder { color: rgba(255,255,255,0.3); }
 .role-input:focus { color: #fff; }
 .tabs { display: flex; gap: 3px; background: rgba(255,255,255,0.08); border-radius: 7px; padding: 3px; flex-shrink: 0; }
-.tab-btn { padding: 5px 13px; border: none; border-radius: 5px; background: transparent; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.tab-btn { padding: 5px 13px; border: none; border-radius: 5px; background: transparent; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; cursor: pointer; transition: all var(--transition); white-space: nowrap; }
 .tab-btn.active { background: rgba(255,255,255,0.18); color: #fff; }
 .tab-btn:hover:not(.active) { color: rgba(255,255,255,0.8); }
 .hdr-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .prog-pill { font-size: 11px; color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.08); padding: 3px 9px; border-radius: 20px; min-width: 48px; text-align: center; white-space: nowrap; }
-.hdr-btn { padding: 5px 10px; border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; background: transparent; color: rgba(255,255,255,0.65); font-size: 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+.hdr-btn { padding: 5px 10px; border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; background: transparent; color: rgba(255,255,255,0.65); font-size: 12px; cursor: pointer; transition: all var(--transition); white-space: nowrap; font-family: inherit; }
 .hdr-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.32); color: rgba(255,255,255,0.9); }
 .hdr-btn.focus-on { background: rgba(37,99,235,0.5); border-color: rgba(37,99,235,0.8); color: #fff; }
 .hdr-btn.export-btn { color: #93c5fd; border-color: rgba(147,197,253,0.35); }
@@ -58,25 +60,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Ne
 .sync-dot.unlinked { background: rgba(251,191,36,0.5); }
 
 /* ── Category nav ── */
-.cat-nav { position: fixed; top: var(--header-h); left: 0; right: 0; height: var(--nav-h); background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 1.25rem; gap: 4px; z-index: 90; overflow-x: auto; scrollbar-width: none; transition: top 0.2s; }
+.cat-nav { position: fixed; top: var(--header-h); left: 0; right: 0; height: var(--nav-h); background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 1.25rem; gap: 4px; z-index: var(--z-nav); overflow-x: auto; scrollbar-width: none; transition: top var(--transition); }
 .cat-nav::-webkit-scrollbar { display: none; }
 .cat-nav.shifted { top: calc(var(--header-h) + 34px); }
-.cat-pill { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--t2); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; text-decoration: none; transition: all 0.15s; }
+.cat-pill { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--t2); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; text-decoration: none; transition: all var(--transition); }
 .cat-pill:hover { border-color: var(--accent); color: var(--accent); }
 .cat-pill.active { background: var(--accent-bg); border-color: transparent; color: var(--accent); }
 
 /* ── Main ── */
-.main { padding: calc(var(--top) + 1.5rem) 1.25rem 5rem; max-width: 760px; margin: 0 auto; transition: padding-top 0.2s; }
+.main { padding: calc(var(--top) + 1.5rem) 1.25rem 5rem; max-width: 760px; margin: 0 auto; transition: padding-top var(--transition); }
 .main.shifted { padding-top: calc(var(--top) + 34px + 1.5rem); }
 .panel { display: none; }
 .panel.active { display: block; }
 .cat-section { margin-bottom: 2.25rem; scroll-margin-top: calc(var(--top) + 16px); }
 .cat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--t3); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.add-in-cat { font-size: 11px; font-weight: 500; color: var(--accent); background: none; border: none; cursor: pointer; letter-spacing: 0; text-transform: none; padding: 2px 7px; border-radius: 4px; transition: all 0.15s; font-family: inherit; }
+.add-in-cat { font-size: 11px; font-weight: 500; color: var(--accent); background: none; border: none; cursor: pointer; letter-spacing: 0; text-transform: none; padding: 2px 7px; border-radius: 4px; transition: all var(--transition); font-family: inherit; }
 .add-in-cat:hover { background: var(--accent-bg); }
 
 /* ── Card ── */
-.q-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; transition: border-color 0.15s; }
+.q-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; transition: border-color var(--transition); }
 .q-card:hover:not(.done) { border-color: var(--border-h); }
 .q-card.done { background: var(--done-bg); }
 .q-card.done .q-text { color: var(--done-c); text-decoration: line-through; }
@@ -84,17 +86,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Ne
 .q-card.dragging { opacity: 0.4; border: 2px dashed var(--accent); }
 .q-card.drag-over { border-color: var(--accent); border-style: dashed; }
 .q-top { display: flex; align-items: flex-start; gap: 9px; padding: 13px 13px 8px; }
-.drag-h { color: var(--t3); cursor: grab; font-size: 15px; flex-shrink: 0; line-height: 1; padding-top: 2px; opacity: 0; transition: opacity 0.15s; user-select: none; }
+.drag-h { color: var(--t3); cursor: grab; font-size: 15px; flex-shrink: 0; line-height: 1; padding-top: 2px; opacity: 0; transition: opacity var(--transition); user-select: none; }
 .q-card:hover .drag-h { opacity: 1; }
 body.focus-mode .drag-h { display: none; }
-.q-chk { width: 18px; height: 18px; border: 1.5px solid var(--border-h); border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 2px; }
+.q-chk { width: 18px; height: 18px; border: 1.5px solid var(--border-h); border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); margin-top: 2px; }
 .q-chk:hover { border-color: var(--accent); }
 .q-chk.on { background: var(--accent); border-color: var(--accent); }
 .q-chk.on::after { content: ''; display: block; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg) translateY(-1px); }
 .q-body { flex: 1; min-width: 0; }
 .q-text { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5; }
 .q-acts { display: flex; align-items: center; gap: 2px; flex-shrink: 0; margin-top: 1px; }
-.q-icn { width: 27px; height: 27px; border: none; background: none; color: var(--t3); cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 13px; opacity: 0; transition: all 0.15s; font-family: inherit; }
+.q-icn { width: 27px; height: 27px; border: none; background: none; color: var(--t3); cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 13px; opacity: 0; transition: all var(--transition); font-family: inherit; }
 .q-card:hover .q-icn { opacity: 1; }
 .q-icn:hover { background: var(--bg); color: var(--text); }
 .q-icn.del:hover { color: #dc2626; background: #fee2e2; }
@@ -103,7 +105,7 @@ body.focus-mode .q-icn { display: none; }
 /* ── Guidance ── */
 .gt-wrap { padding: 0 13px 0 40px; }
 .gt-btn { display: flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 0 0 6px; font-family: inherit; }
-.gt-arrow { font-size: 9px; color: var(--t3); transition: transform 0.15s; display: inline-block; }
+.gt-arrow { font-size: 9px; color: var(--t3); transition: transform var(--transition); display: inline-block; }
 .gt-btn.open .gt-arrow { transform: rotate(90deg); }
 .g-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
 .gt-hint { font-size: 11px; color: var(--t3); }
@@ -114,30 +116,32 @@ body.focus-mode .gt-wrap { display: none; }
 /* ── Notes ── */
 .q-nwrap { padding: 0 13px 12px 40px; }
 body.focus-mode .q-nwrap { padding-left: 13px; }
-textarea.q-notes { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); resize: none; outline: none; min-height: 56px; overflow: hidden; transition: border-color 0.15s, min-height 0.15s; line-height: 1.55; }
+textarea.q-notes { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); resize: none; outline: none; min-height: 56px; overflow: hidden; transition: border-color var(--transition), min-height var(--transition); line-height: 1.55; }
 textarea.q-notes:focus { border-color: var(--accent); background: #fff; min-height: 74px; }
 textarea.q-notes::placeholder { color: var(--t3); }
 
 /* ── FAB ── */
-.fab { position: fixed; bottom: 2rem; right: 2rem; width: 46px; height: 46px; background: var(--accent); color: #fff; border: none; border-radius: 50%; font-size: 22px; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; transition: all 0.15s; font-family: inherit; }
+.fab { position: fixed; bottom: 2rem; right: 2rem; width: 46px; height: 46px; background: var(--accent); color: #fff; border: none; border-radius: 50%; font-size: 22px; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.4); display: flex; align-items: center; justify-content: center; z-index: var(--z-fab); transition: all var(--transition); font-family: inherit; }
 .fab:hover { background: var(--accent-h); transform: scale(1.06); }
 
 /* ── Modals shared ── */
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: var(--z-modal); display: flex; align-items: center; justify-content: center; padding: 1rem; }
 .modal-bg.hidden { display: none; }
 .modal-box { background: var(--card); border-radius: 12px; padding: 1.5rem; width: 100%; max-width: 510px; max-height: 90vh; overflow-y: auto; }
 .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; }
 .frow { margin-bottom: 11px; }
 .flbl { font-size: 12px; font-weight: 500; color: var(--t2); margin-bottom: 4px; display: block; }
 .flbl span { font-weight: 400; opacity: 0.6; }
-input.fi, select.fi, textarea.fi { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.15s; }
+input.fi, select.fi, textarea.fi { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg); outline: none; transition: border-color var(--transition); }
 input.fi:focus, select.fi:focus, textarea.fi:focus { border-color: var(--accent); background: #fff; }
 textarea.fi { min-height: 72px; resize: vertical; }
 .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
-.mbtn { padding: 7px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text); transition: all 0.15s; font-family: inherit; }
+.mbtn { padding: 7px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text); transition: all var(--transition); font-family: inherit; }
 .mbtn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 .mbtn:hover:not(.primary) { background: var(--border); }
 .mbtn.primary:hover { background: var(--accent-h); }
+.mbtn.danger { background: #dc2626; border-color: #dc2626; color: #fff; }
+.mbtn.danger:hover { background: #b91c1c; }
 
 /* ── Help modal ── */
 .help-box { max-width: 580px; }
@@ -163,7 +167,7 @@ kbd { display: inline-block; padding: 2px 7px; border: 1px solid var(--border-h)
 .step-list li::before { content: counter(steps); width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 
 /* ── Toast ── */
-.toast { position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 7px 16px; border-radius: 20px; font-size: 13px; z-index: 400; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+.toast { position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 7px 16px; border-radius: 20px; font-size: 13px; z-index: var(--z-toast); opacity: 0; transition: opacity var(--transition); pointer-events: none; white-space: nowrap; }
 .toast.vis { opacity: 1; }
 
 /* ── Badge colours ── */
@@ -209,40 +213,40 @@ kbd { display: inline-block; padding: 2px 7px; border: 1px solid var(--border-h)
   <button class="sdismiss" onclick="dismissBanner()" title="Dismiss">✕</button>
 </div>
 
-<nav class="cat-nav" id="cat-nav"></nav>
+<nav class="cat-nav" id="cat-nav" aria-label="Question categories"></nav>
 <main class="main" id="main-el">
   <div id="panel-ask" class="panel active"></div>
   <div id="panel-prep" class="panel"></div>
 </main>
 
-<button class="fab" onclick="openModal()" title="Add question">+</button>
+<button class="fab" onclick="openModal()" title="Add question" aria-label="Add a new question">+</button>
 
 <!-- Add question modal -->
 <div class="modal-bg hidden" id="modal" onclick="bgClose(event,'modal')">
   <div class="modal-box">
     <div class="modal-title">Add a question</div>
     <div class="frow">
-      <label class="flbl">Section</label>
+      <label class="flbl" for="m-tab">Section</label>
       <select class="fi" id="m-tab" onchange="updateModalCats()">
         <option value="ask">Questions to Ask</option>
         <option value="prep">Questions to Prepare</option>
       </select>
     </div>
     <div class="frow">
-      <label class="flbl">Category <span>(or type a new one)</span></label>
+      <label class="flbl" for="m-cat">Category <span>(or type a new one)</span></label>
       <input class="fi" id="m-cat" list="m-cat-list" placeholder="Select or type a category">
       <datalist id="m-cat-list"></datalist>
     </div>
     <div class="frow">
-      <label class="flbl">Question</label>
+      <label class="flbl" for="m-text">Question</label>
       <textarea class="fi" id="m-text" placeholder="Type your question..."></textarea>
     </div>
     <div class="frow">
-      <label class="flbl">Guidance <span>(optional)</span></label>
+      <label class="flbl" for="m-guidance">Guidance <span>(optional)</span></label>
       <textarea class="fi" id="m-guidance" placeholder="How to approach this — timing, what to emphasise..." style="min-height:60px"></textarea>
     </div>
     <div class="frow">
-      <label class="flbl">Answer type</label>
+      <label class="flbl" for="m-guide">Answer type</label>
       <select class="fi" id="m-guide">
         <option value="short">Short — 1–2 sentences</option>
         <option value="listen">Listen — let them talk, take notes</option>
@@ -328,6 +332,17 @@ kbd { display: inline-block; padding: 2px 7px; border: 1px solid var(--border-h)
   </div>
 </div>
 
+<!-- Confirm modal -->
+<div class="modal-bg hidden" id="confirm-modal" onclick="bgClose(event,'confirm-modal')">
+  <div class="modal-box" style="max-width:360px">
+    <div class="modal-title" id="confirm-msg">Remove this question?</div>
+    <div class="modal-btns">
+      <button class="mbtn" onclick="closeModal('confirm-modal')">Cancel</button>
+      <button class="mbtn danger" id="confirm-ok-btn">Remove</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!--DATA:START-->
@@ -338,7 +353,8 @@ kbd { display: inline-block; padding: 2px 7px; border: 1px solid var(--border-h)
 
 <script>
 // ── Constants ──────────────────────────────────────────────────────────────
-const GUIDE_LABELS = { short:'Short — 1–2 sentences', listen:'Listen & note', star:'STAR story — 3–4 min', tech:'Technical — 1–2 min', medium:'Medium — 2–3 min', motiv:'Motivation — 1–2 min', concise:'Concise — direct answer' };
+const LS_KEY = LS_KEY;
+const GUIDE_LABELS ={ short:'Short — 1–2 sentences', listen:'Listen & note', star:'STAR story — 3–4 min', tech:'Technical — 1–2 min', medium:'Medium — 2–3 min', motiv:'Motivation — 1–2 min', concise:'Concise — direct answer' };
 const GUIDE_CLASS  = { short:'gb-short', listen:'gb-listen', star:'gb-star', tech:'gb-tech', medium:'gb-medium', motiv:'gb-motiv', concise:'gb-concise' };
 const DEFAULT_CATS = {
   ask:  ['Role & Scope','Team & Culture','Growth & Development','Company & Strategy','Practical'],
@@ -349,11 +365,14 @@ const DEFAULT_CATS = {
 let qs = [], role = '', currentTab = 'ask', focusMode = false;
 let dragSrcId = null, fileHandle = null, writeTimer = null;
 
+// ── Helpers ────────────────────────────────────────────────────────────────
+function el(id) { return document.getElementById(id); }
+
 // ── IndexedDB ──────────────────────────────────────────────────────────────
 const IDB = 'iv-prep', IDB_S = 'handles';
 function openIDB() { return new Promise((res,rej)=>{ const r=indexedDB.open(IDB,1); r.onupgradeneeded=e=>e.target.result.createObjectStore(IDB_S); r.onsuccess=e=>res(e.target.result); r.onerror=()=>rej(r.error); }); }
 async function idbGet(k) { try { const db=await openIDB(); return new Promise(res=>{ const r=db.transaction(IDB_S).objectStore(IDB_S).get(k); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); }); } catch { return null; } }
-async function idbSet(k,v) { try { const db=await openIDB(); return new Promise(res=>{ const tx=db.transaction(IDB_S,'readwrite'); tx.objectStore(IDB_S).put(v,k); tx.oncomplete=res; }); } catch {} }
+async function idbSet(k,v) { try { const db=await openIDB(); return new Promise(res=>{ const tx=db.transaction(IDB_S,'readwrite'); tx.objectStore(IDB_S).put(v,k); tx.oncomplete=res; }); } catch { dot('unlinked'); } }
 
 // ── Load ───────────────────────────────────────────────────────────────────
 function load() {
@@ -362,7 +381,7 @@ function load() {
     qs = raw.qs || []; role = raw.role || '';
   } catch {}
   if (!qs.length) {
-    try { const r=localStorage.getItem('iv-prep-v1'); if(r){ const d=JSON.parse(r); qs=d.qs||[]; role=d.role||''; } } catch {}
+    try { const r=localStorage.getItem(LS_KEY); if(r){ const d=JSON.parse(r); qs=d.qs||[]; role=d.role||''; } } catch {}
   }
   if (role) document.getElementById('role-input').value = role;
 }
@@ -371,7 +390,7 @@ function load() {
 function dot(state) { const d=document.getElementById('sync-dot'); d.className='sync-dot '+state; const t={saving:'Saving…',saved:'Saved to file ✓',unlinked:'File not linked — notes in browser only'}; d.title=t[state]||''; }
 function persist() {
   const payload = { role, qs };
-  try { localStorage.setItem('iv-prep-v1', JSON.stringify(payload)); } catch {}
+  try { localStorage.setItem(LS_KEY, JSON.stringify(payload)); } catch {}
   if (fileHandle) { dot('saving'); clearTimeout(writeTimer); writeTimer = setTimeout(()=>writeToFile(payload), 500); }
 }
 async function writeToFile(payload) {
@@ -386,7 +405,7 @@ async function writeToFile(payload) {
     const updated = text.replace(marker, block);
     const w = await fileHandle.createWritable(); await w.write(updated); await w.close();
     dot('saved');
-  } catch(e) { console.warn(e); dot('unlinked'); }
+  } catch { dot('unlinked'); }
 }
 
 // ── File linking ───────────────────────────────────────────────────────────
@@ -461,13 +480,13 @@ function renderCard(q) {
       <div class="q-chk${q.done?' on':''}" onclick="toggleDone('${q.id}')"></div>
       <div class="q-body"><div class="q-text">${esc(q.text)}</div></div>
       <div class="q-acts">
-        <button class="q-icn" onclick="moveCard('${q.id}',-1)" title="Move up">↑</button>
-        <button class="q-icn" onclick="moveCard('${q.id}',1)" title="Move down">↓</button>
-        <button class="q-icn del" onclick="delCard('${q.id}')" title="Delete">✕</button>
+        <button class="q-icn" onclick="moveCard('${q.id}',-1)" title="Move up" aria-label="Move question up">↑</button>
+        <button class="q-icn" onclick="moveCard('${q.id}',1)" title="Move down" aria-label="Move question down">↓</button>
+        <button class="q-icn del" onclick="delCard('${q.id}')" title="Delete" aria-label="Delete question">✕</button>
       </div>
     </div>
     <div class="gt-wrap">
-      <button class="gt-btn" onclick="toggleGuide('${q.id}',this)">
+      <button class="gt-btn" onclick="toggleGuide('${q.id}',this)" aria-expanded="false" aria-controls="guide-${q.id}">
         <span class="gt-arrow">▶</span>
         <span class="g-badge ${gc}">${esc(gl)}</span>
         <span class="gt-hint">— tap for guidance</span>
@@ -503,7 +522,7 @@ function toggleDone(id) {
   card.classList.toggle('done',q.done); card.querySelector('.q-chk').classList.toggle('on',q.done);
   updateProgress(); persist();
 }
-function toggleGuide(id,btn) { document.getElementById('guide-'+id).classList.toggle('vis'); btn.classList.toggle('open'); }
+function toggleGuide(id,btn) { const g=el('guide-'+id); g.classList.toggle('vis'); btn.classList.toggle('open'); btn.setAttribute('aria-expanded', g.classList.contains('vis') ? 'true' : 'false'); }
 function onNote(id,val) { const q=qs.find(x=>x.id===id); if(q){ q.notes=val; persist(); } }
 function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 function bindTextareas() { document.querySelectorAll('textarea.q-notes').forEach(autoResize); }
@@ -514,13 +533,19 @@ function moveCard(id,dir) {
   if(swi<0||swi>=sib.length) return;
   [q.ord,sib[swi].ord]=[sib[swi].ord,q.ord];
   const el=document.querySelector(`.q-list[data-tab="${q.tab}"][data-cat="${q.cat}"]`);
-  if(el){ el.innerHTML=qs.filter(x=>x.tab===q.tab&&x.cat===q.cat).sort((a,b)=>a.ord-b.ord).map(renderCard).join(''); bindTextareas(); bindDrag(); }
+  if(el){ el.innerHTML=qs.filter(x=>x.tab===q.tab&&x.cat===q.cat).sort((a,b)=>a.ord-b.ord).map(renderCard).join(''); bindTextareas(); }
   persist();
 }
+function openConfirm(msg, onOk) {
+  el('confirm-msg').textContent = msg;
+  el('confirm-ok-btn').onclick = () => { closeModal('confirm-modal'); onOk(); };
+  el('confirm-modal').classList.remove('hidden');
+}
 function delCard(id) {
-  if(!confirm('Remove this question?')) return;
-  qs=qs.filter(x=>x.id!==id); document.getElementById('card-'+id)?.remove();
-  updateProgress(); persist();
+  openConfirm('Remove this question?', () => {
+    qs=qs.filter(x=>x.id!==id); el('card-'+id)?.remove();
+    updateProgress(); persist();
+  });
 }
 function toggleFocus() {
   focusMode=!focusMode; document.body.classList.toggle('focus-mode',focusMode);
@@ -530,12 +555,15 @@ function toggleFocus() {
 
 // ── Drag & drop ────────────────────────────────────────────────────────────
 function bindDrag() {
-  document.querySelectorAll('.q-card').forEach(card=>{
-    card.addEventListener('dragstart',e=>{ dragSrcId=card.dataset.id; e.dataTransfer.effectAllowed='move'; setTimeout(()=>card.classList.add('dragging'),0); });
-    card.addEventListener('dragend',()=>{ card.classList.remove('dragging'); document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('drag-over')); dragSrcId=null; });
-    card.addEventListener('dragover',e=>{ e.preventDefault(); if(card.dataset.id===dragSrcId) return; const s=qs.find(x=>x.id===dragSrcId),t=qs.find(x=>x.id===card.dataset.id); if(s&&t&&s.tab===t.tab&&s.cat===t.cat){ document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('drag-over')); card.classList.add('drag-over'); } });
-    card.addEventListener('dragleave',()=>card.classList.remove('drag-over'));
-    card.addEventListener('drop',e=>{ e.preventDefault(); if(!dragSrcId||card.dataset.id===dragSrcId) return; const s=qs.find(x=>x.id===dragSrcId),t=qs.find(x=>x.id===card.dataset.id); if(s&&t&&s.tab===t.tab&&s.cat===t.cat){ [s.ord,t.ord]=[t.ord,s.ord]; const el=document.querySelector(`.q-list[data-tab="${s.tab}"][data-cat="${s.cat}"]`); if(el){ el.innerHTML=qs.filter(x=>x.tab===s.tab&&x.cat===s.cat).sort((a,b)=>a.ord-b.ord).map(renderCard).join(''); bindTextareas(); bindDrag(); } persist(); } });
+  ['ask','prep'].forEach(tab=>{
+    const panel=el('panel-'+tab);
+    if(panel.dataset.dragBound) return;
+    panel.dataset.dragBound='1';
+    panel.addEventListener('dragstart',e=>{ const card=e.target.closest('.q-card'); if(!card) return; dragSrcId=card.dataset.id; e.dataTransfer.effectAllowed='move'; setTimeout(()=>card.classList.add('dragging'),0); });
+    panel.addEventListener('dragend',e=>{ const card=e.target.closest('.q-card'); if(card) card.classList.remove('dragging'); document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('drag-over')); dragSrcId=null; });
+    panel.addEventListener('dragover',e=>{ e.preventDefault(); const card=e.target.closest('.q-card'); if(!card||card.dataset.id===dragSrcId) return; const s=qs.find(x=>x.id===dragSrcId),t=qs.find(x=>x.id===card.dataset.id); if(s&&t&&s.tab===t.tab&&s.cat===t.cat){ document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('drag-over')); card.classList.add('drag-over'); } });
+    panel.addEventListener('dragleave',e=>{ const card=e.target.closest('.q-card'); if(card) card.classList.remove('drag-over'); });
+    panel.addEventListener('drop',e=>{ e.preventDefault(); const card=e.target.closest('.q-card'); if(!card||!dragSrcId||card.dataset.id===dragSrcId) return; const s=qs.find(x=>x.id===dragSrcId),t=qs.find(x=>x.id===card.dataset.id); if(s&&t&&s.tab===t.tab&&s.cat===t.cat){ [s.ord,t.ord]=[t.ord,s.ord]; const list=document.querySelector(`.q-list[data-tab="${s.tab}"][data-cat="${s.cat}"]`); if(list){ list.innerHTML=qs.filter(x=>x.tab===s.tab&&x.cat===s.cat).sort((a,b)=>a.ord-b.ord).map(renderCard).join(''); bindTextareas(); } persist(); } });
   });
 }
 
@@ -609,7 +637,7 @@ let toastT=null;
 function showToast(msg) { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('vis'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('vis'),2200); }
 
 // ── Keys ───────────────────────────────────────────────────────────────────
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal('modal'); closeModal('help-modal'); } if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); exportMD(); } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal('modal'); closeModal('help-modal'); closeModal('confirm-modal'); } if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); exportMD(); } });
 
 // ── Init ───────────────────────────────────────────────────────────────────
 load(); render();
